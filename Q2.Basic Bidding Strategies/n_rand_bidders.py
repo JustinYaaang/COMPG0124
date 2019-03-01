@@ -52,11 +52,11 @@ def simulate_n_random_bidders(lower, upper, dataframe, nb_agents):
 
 def main():
     print("main")
+    # these bounds were found from the previous section
     lower = 30
     upper = 110
     nb_agents = 50
 
-    # TODO: import the dataframe 
     dataframe = pd.read_csv('../we_data/validation.csv')
 
     clicks_per_agent = simulate_n_random_bidders(lower, upper, dataframe, nb_agents)
