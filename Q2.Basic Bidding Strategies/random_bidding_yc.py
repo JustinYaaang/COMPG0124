@@ -5,24 +5,7 @@ from random import randint
 import seaborn as sns
 import datetime 
 
-validation_df = pd.read_csv("../we_data/validation.csv")
 
-print("data fetched")
-budget=6250*1000
-
-minBid=np.min(validation_df["payprice"].values)
-maxBid=np.max(validation_df["payprice"].values)
-
-print("minBid: {}".format(minBid))
-print("maxBid: {}".format(maxBid))
-
-step_size = 1
-custRange = np.arange(minBid+1, maxBid+5,step_size) # determines the range that bids should be in
-
-minCustRange = np.arange(21, 91, step_size) # determines the range that bids should be in
-maxCustRange = np.arange(71, 161, step_size) # determines the range that bids should be in
-
-pd.set_option('display.max_columns', None)
 
 
 def plotResults(Matrix):
@@ -183,4 +166,23 @@ def random_bidding_run():
 
 
 # random_bidding_run()
-multi_random(validation_df, 50, 30, 110, budget, validation_df.shape[0])
+
+if __name__ == "__main__":
+    validation_df = pd.read_csv("../we_data/validation.csv")
+
+    print("data fetched")
+    budget=6250*1000
+
+    minBid=np.min(validation_df["payprice"].values)
+    maxBid=np.max(validation_df["payprice"].values)
+
+    print("minBid: {}".format(minBid))
+    print("maxBid: {}".format(maxBid))
+
+    step_size = 1
+    custRange = np.arange(minBid+1, maxBid+5,step_size) # determines the range that bids should be in
+
+    minCustRange = np.arange(21, 91, step_size) # determines the range that bids should be in
+    maxCustRange = np.arange(71, 161, step_size) # determines the range that bids should be in
+
+    pd.set_option('display.max_columns', None)
