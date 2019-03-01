@@ -1,6 +1,7 @@
 import agent
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from random import randint 
 from agent import Agent
 
@@ -33,7 +34,7 @@ def simulate_n_random_bidders(lower, upper, dataframe, nb_agents):
     all_bids = np.column_stack((all_bids, payprice))
 
     clicks = get_clicks(dataframe)
-
+    print(np.sum(clicks))
     # This contains, for each row, what the index of the max is.
     columns_of_maxes = np.argmax(all_bids, axis=1) 
 
@@ -45,7 +46,7 @@ def simulate_n_random_bidders(lower, upper, dataframe, nb_agents):
 
     clicks_per_agent = list()
     for ag in agents:
-        clicks_per_agent.append(ag.click)
+        clicks_per_agent.append(ag.clicks)
 
     return clicks_per_agent
 
@@ -55,12 +56,21 @@ def main():
     # these bounds were found from the previous section
     lower = 30
     upper = 110
-    nb_agents = 50
+    nb_agents = 100
 
     dataframe = pd.read_csv('../we_data/validation.csv')
 
     clicks_per_agent = simulate_n_random_bidders(lower, upper, dataframe, nb_agents)
-
+    print(clicks_per_agent)
+    count_list = [0] * 20
+    for i in range(nb_agents):
+        # print(clicks_per_agent[i])
+        count_list[clicks_per_agent[i]] += 1
+    print(count_list)
+    print(sum(count_list))
+    plt.plot(count_list)
+    plt.show()
+    print(sum(clicks_per_agent))
 
 if __name__ == "__main__":
     main()
