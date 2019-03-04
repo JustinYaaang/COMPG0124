@@ -5,28 +5,31 @@ import numpy as np
 
 def ortb_bid_generator():
     #formula = sqrt(c/lambda pctr + c**2) - c
-    c = 70
-    lamda = 3.27e-06
+    c = 77
+    lamda = 3.3e-06
     bids = []
 
     impr = pClickDF.shape[0]
     clicks = pClickDF['click'].sum()
     ctr = clicks*100/impr
 
-    for p in pClickDF['click']:
-        bid = np.sqrt((c/lamda * ctr) + c**2) - c
+    for p in pCTRDF['pCTR']:
+        bid = np.sqrt((c/lamda * p) + c**2) - c
         bids.append(bid)
     return bids
 
 if __name__ == "__main__":
     validationset = "../we_data/validation.csv"
     pClickset = "./pClick.csv"
+    pCTRset = "./pCTRval.csv"
 
     validationReader = dataReader(validationset)
     pClickReader = dataReader(pClickset)
+    pCTRReader = dataReader(pCTRset)
 
     validationDF = validationReader.getDataFrame()
     pClickDF = pClickReader.getDataFrame()
+    pCTRDF = pCTRReader.getDataFrame()
 
     ortbsDF = pd.DataFrame()
     ortbsDF['bids'] = ortb_bid_generator()
