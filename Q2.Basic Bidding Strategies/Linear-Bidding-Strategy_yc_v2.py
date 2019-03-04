@@ -2,12 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LogisticRegression 
+from sklearn import metrics
+budget=6250*1000
 
-df_train = pd.read_csv("../we_data/train.csv")
-df_test = pd.read_csv('../we_data/test.csv')
-df_val = pd.read_csv('../we_data/validation.csv')
-
-print("data read")
 
 def encode_days(dataframe):
     dataframe = pd.concat([dataframe,pd.get_dummies(dataframe.weekday,prefix='day')],axis=1)
@@ -99,101 +96,158 @@ def encode_usertags(dataframe):
     return dataframe
 
 
-xtrain = df_train.drop(['click','bidid','userid','IP','city','domain', 'url','urlid','slotid','creative','bidprice','payprice','keypage', 'usertag'], axis=1)
-ytrain = df_train.click
+def calculate_pCTR():
+    df_train = pd.read_csv("../we_data/train.csv")
+    df_test = pd.read_csv('../we_data/test.csv')
+    df_val = pd.read_csv('../we_data/validation.csv')
 
-xval = df_val.drop(['click','bidid','userid','IP','city','domain', 'url','urlid','slotid','creative','bidprice','payprice','keypage', 'usertag'], axis=1)
-yval = df_val.click
+    print("data read")
 
-xtest = df_test.drop(['bidid','userid','IP','city','domain', 'url','urlid','slotid','creative','keypage', 'usertag'], axis=1)
+    xtrain = df_train.drop(['click','bidid','userid','IP','city','domain', 'url','urlid','slotid','creative','bidprice','payprice','keypage', 'usertag'], axis=1)
+    ytrain = df_train.click
 
-xtrain = encode_adexchange(xtrain)
-xtrain = encode_advertiser(xtrain)
-xtrain = encode_days(xtrain)
-xtrain = encode_hours(xtrain)
-xtrain = encode_os_browser(xtrain)
-xtrain = encode_region(xtrain)
-xtrain = encode_slotformat(xtrain)
-xtrain = encode_slotheight(xtrain)
-xtrain = encode_slotprice(xtrain)
-xtrain = encode_slotvisibility(xtrain)
-xtrain = encode_slotwidth(xtrain)
-# xtrain = encode_usertags(xtrain)
+    xval = df_val.drop(['click','bidid','userid','IP','city','domain', 'url','urlid','slotid','creative','bidprice','payprice','keypage', 'usertag'], axis=1)
+    yval = df_val.click
 
-xval = encode_adexchange(xval)
-xval = encode_advertiser(xval)
-xval = encode_days(xval)
-xval = encode_hours(xval)
-xval = encode_os_browser(xval)
-xval = encode_region(xval)
-xval = encode_slotformat(xval)
-xval = encode_slotheight(xval)
-xval = encode_slotprice(xval)
-xval = encode_slotvisibility(xval)
-xval = encode_slotwidth(xval)
-# xval = encode_usertags(xval)
+    xtest = df_test.drop(['bidid','userid','IP','city','domain', 'url','urlid','slotid','creative','keypage', 'usertag'], axis=1)
 
-xtest = encode_adexchange(xtest)
-xtest = encode_advertiser(xtest)
-xtest = encode_days(xtest)
-xtest = encode_hours(xtest)
-xtest = encode_os_browser(xtest)
-xtest = encode_region(xtest)
-xtest = encode_slotformat(xtest)
-xtest = encode_slotheight(xtest)
-xtest = encode_slotprice(xtest)
-xtest = encode_slotvisibility(xtest)
-xtest = encode_slotwidth(xtest)
-# xtest = encode_usertags(xtest)
+    xtrain = encode_adexchange(xtrain)
+    xtrain = encode_advertiser(xtrain)
+    xtrain = encode_days(xtrain)
+    xtrain = encode_hours(xtrain)
+    xtrain = encode_os_browser(xtrain)
+    xtrain = encode_region(xtrain)
+    xtrain = encode_slotformat(xtrain)
+    xtrain = encode_slotheight(xtrain)
+    xtrain = encode_slotprice(xtrain)
+    xtrain = encode_slotvisibility(xtrain)
+    xtrain = encode_slotwidth(xtrain)
+    # xtrain = encode_usertags(xtrain)
 
-#run on validation set
-model = LogisticRegression(penalty='l2', class_weight='balanced')
-resultval = model.fit(xtrain, ytrain).predict(xval)
+    xval = encode_adexchange(xval)
+    xval = encode_advertiser(xval)
+    xval = encode_days(xval)
+    xval = encode_hours(xval)
+    xval = encode_os_browser(xval)
+    xval = encode_region(xval)
+    xval = encode_slotformat(xval)
+    xval = encode_slotheight(xval)
+    xval = encode_slotprice(xval)
+    xval = encode_slotvisibility(xval)
+    xval = encode_slotwidth(xval)
+    # xval = encode_usertags(xval)
 
-#run on test set
-resulttest = model.fit(xtrain, ytrain).predict(xtest)
+    xtest = encode_adexchange(xtest)
+    xtest = encode_advertiser(xtest)
+    xtest = encode_days(xtest)
+    xtest = encode_hours(xtest)
+    xtest = encode_os_browser(xtest)
+    xtest = encode_region(xtest)
+    xtest = encode_slotformat(xtest)
+    xtest = encode_slotheight(xtest)
+    xtest = encode_slotprice(xtest)
+    xtest = encode_slotvisibility(xtest)
+    xtest = encode_slotwidth(xtest)
+    # xtest = encode_usertags(xtest)
 
-predprob = model.predict_proba(xval)
-pCTRval = pd.DataFrame(predprob)
+    #run on validation set
+    model = LogisticRegression(penalty='l2', class_weight='balanced')
+    resultval = model.fit(xtrain, ytrain).predict(xval)
 
-#print AUc score
-from sklearn import metrics
-fpr, tpr, thresholds = metrics.roc_curve(df_val.click, pCTRval[1])
-metrics.auc(fpr, tpr)
+    #run on test set
+    resulttest = model.fit(xtrain, ytrain).predict(xtest)
 
-predprob = model.predict_proba(xtest)
+    predprob = model.predict_proba(xval)
+    pCTRval = pd.DataFrame(predprob)
 
-pCTRtest = pd.DataFrame(predprob)
+    #print AUc score
+    fpr, tpr, thresholds = metrics.roc_curve(df_val.click, pCTRval[1])
+    print("printing AUc score:")
+    print(metrics.auc(fpr, tpr))
 
-#recalibrate the pctr
-#newpctr = pctr / ( pctr + (1-pctr)/balance_ratio)
+    predprob = model.predict_proba(xtest)
 
-new_pctrval = []
-new_pctrtest = []
+    pCTRtest = pd.DataFrame(predprob)
 
-ratio = len(df_train) / 2 * np.bincount(df_train.click)
-balance_ratio = ratio[1] / ratio[0]
+    #recalibrate the pctr
+    #newpctr = pctr / ( pctr + (1-pctr)/balance_ratio)
 
-for pctr in pCTRval[1]:
-    new_pctrval.append( pctr / (pctr + ((1-pctr) / balance_ratio)))
+    new_pctrval = []
+    new_pctrtest = []
 
-for pctr in pCTRtest[1]:
-    new_pctrtest.append( pctr / (pctr + ((1-pctr) / balance_ratio)))
+    ratio = len(df_train) / 2 * np.bincount(df_train.click)
+    balance_ratio = ratio[1] / ratio[0]
 
-new_pctrval = pd.DataFrame(new_pctrval)
-new_pctrval.to_csv('pCTRval.csv')
+    for pctr in pCTRval[1]:
+        new_pctrval.append( pctr / (pctr + ((1-pctr) / balance_ratio)))
 
-new_pctrtest = pd.DataFrame(new_pctrtest)
-new_pctrtest.to_csv('pCTRtest.csv')
+    for pctr in pCTRtest[1]:
+        new_pctrtest.append( pctr / (pctr + ((1-pctr) / balance_ratio)))
 
-fpr, tpr, thresholds = metrics.roc_curve(df_val.click, new_pctrval)
-metrics.auc(fpr, tpr)
+    new_pctrval = pd.DataFrame(new_pctrval)
+    new_pctrval.to_csv('pCTRval.csv')
 
-f, axes = plt.subplots(1, figsize=(8, 5))
-lab = 'AUC=%.5f' % metrics.auc(fpr, tpr)
-axes.step(fpr, tpr, lw=2,label=lab)
-axes.legend(loc='lower right', fontsize='small')
-plt.show()
+    bid_ids = df_test['bidid']
+    new_pctrtest = pd.DataFrame(new_pctrtest)
+
+    test_result = pd.concat([bid_ids, new_pctrtest], axis=1, sort=False)
+
+    test_result.to_csv('pCTRtest.csv')
+
+    fpr, tpr, thresholds = metrics.roc_curve(df_val.click, new_pctrval)
+    metrics.auc(fpr, tpr)
+
+    f, axes = plt.subplots(1, figsize=(8, 5))
+    lab = 'AUC=%.5f' % metrics.auc(fpr, tpr)
+    axes.step(fpr, tpr, lw=2,label=lab)
+    axes.legend(loc='lower right', fontsize='small')
+    plt.show()
+
+def EvalBidByClicksOnly(dataframe, bids, budget, size):
+    AdjustedBudget=(budget/size)*dataframe.shape[0]
+    tempData=dataframe
+
+    tempData['ConstBid'] = bids
+    tempData['trueValues'] = np.where(tempData["payprice"]<tempData['ConstBid'],1,0)
+    tempData['ModelPays'] = tempData['trueValues']*tempData['payprice']
+    tempData['cumsum'] = tempData['ModelPays'].cumsum()
+    lastRowToInclude = np.argmax(tempData['cumsum'].as_matrix()>AdjustedBudget)
+    if lastRowToInclude==0:
+        lastRowToInclude=tempData.shape[0]
+    
+    shortData = tempData.head(lastRowToInclude)
+    trueValues = (0<shortData['ModelPays'])
+    clicks = np.sum(shortData[trueValues]["click"].values)
+    
+    return clicks
 
 
+def linear_bidding():
+    pCTRval = pd.read_csv('pCTRval_retrieved.csv')
+    df_val = pd.read_csv('../we_data/validation.csv')
+
+    avgCTR = df_val.click.sum() / df_val.bidid.count()
+    print(pCTRval.pCTR.sum() / df_val.bidid.count())
+    print(avgCTR)
+    lower_bound, upper_bound = 1, 300
+    best_base_bid, max_clicks = 1, 0
+    size = df_val.shape[0]
+    click_list = []
+    for base_bid in range(1, upper_bound + 1):
+        bids = pCTRval['pCTR'] * base_bid / avgCTR
+        clicks = EvalBidByClicksOnly(df_val, bids, budget, size)
+        print("base_bid: {}, clicks: {}".format(base_bid, clicks))
+
+        if clicks > max_clicks:
+            max_clicks = clicks
+            best_base_bid = base_bid
+        click_list.append(clicks)
+    print("best_base_bid: {}; max_clicks: {}".format(best_base_bid, max_clicks))
+    print(click_list)
+
+
+
+calculate_pCTR()
+
+#linear_bidding()
 
