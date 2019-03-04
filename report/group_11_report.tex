@@ -123,17 +123,18 @@
 % 1st. author
 \alignauthor
 Aksel Cakmak\\
-       \affaddr{UCL Meng}\\
+       \affaddr{15047472}\\
        \email{zcababc@ucl.ac.uk}
 % 2nd. author
 \alignauthor
-G.K.M. Tobin\\
-       \affaddr{UCL Msc}\\
-       \email{email@ucl.ac.uk}
+Chong Yang\\
+       \affaddr{18089022}\\
+       \email{ucabcya@ucl.ac.uk}
 % 3rd. author
-\alignauthor Lars \\
-       \affaddr{UCL Msc}\\
-       \email{email@ucl.ac.uk}
+\alignauthor 
+Chen Song \\
+       \affaddr{17040773}\\
+       \email{ucabcs3@ucl.ac.uk}
 }
 % There's nothing stopping you putting the seventh, eighth, etc.
 % author on the opening page (as the 'third row') but we ask,
@@ -160,35 +161,35 @@ abstract here...
 % http://dl.acm.org/ccs.cfm
 % Please copy and paste the code instead of the example below.
 %
-\begin{CCSXML}
-<ccs2012>
- <concept>
-  <concept_id>10010520.10010553.10010562</concept_id>
-  <concept_desc>Computer systems organization~Embedded systems</concept_desc>
-  <concept_significance>500</concept_significance>
- </concept>
- <concept>
-  <concept_id>10010520.10010575.10010755</concept_id>
-  <concept_desc>Computer systems organization~Redundancy</concept_desc>
-  <concept_significance>300</concept_significance>
- </concept>
- <concept>
-  <concept_id>10010520.10010553.10010554</concept_id>
-  <concept_desc>Computer systems organization~Robotics</concept_desc>
-  <concept_significance>100</concept_significance>
- </concept>
- <concept>
-  <concept_id>10003033.10003083.10003095</concept_id>
-  <concept_desc>Networks~Network reliability</concept_desc>
-  <concept_significance>100</concept_significance>
- </concept>
-</ccs2012>
-\end{CCSXML}
-
-\ccsdesc[500]{Computer systems organization~Embedded systems}
-\ccsdesc[300]{Computer systems organization~Redundancy}
-\ccsdesc{Computer systems organization~Robotics}
-\ccsdesc[100]{Networks~Network reliability}
+%\begin{CCSXML}
+%<ccs2012>
+% <concept>
+%  <concept_id>10010520.10010553.10010562</concept_id>
+%  <concept_desc>Computer systems organization~Embedded systems</concept_desc>
+%  <concept_significance>500</concept_significance>
+% </concept>
+% <concept>
+%  <concept_id>10010520.10010575.10010755</concept_id>
+%  <concept_desc>Computer systems organization~Redundancy</concept_desc>
+%  <concept_significance>300</concept_significance>
+% </concept>
+% <concept>
+%  <concept_id>10010520.10010553.10010554</concept_id>
+%  <concept_desc>Computer systems organization~Robotics</concept_desc>
+%  <concept_significance>100</concept_significance>
+% </concept>
+% <concept>
+%  <concept_id>10003033.10003083.10003095</concept_id>
+%  <concept_desc>Networks~Network reliability</concept_desc>
+%  <concept_significance>100</concept_significance>
+% </concept>
+%</ccs2012>
+%\end{CCSXML}
+%
+%\ccsdesc[500]{Computer systems organization~Embedded systems}
+%\ccsdesc[300]{Computer systems organization~Redundancy}
+%\ccsdesc{Computer systems organization~Robotics}
+%\ccsdesc[100]{Networks~Network reliability}
 
 
 %
@@ -198,15 +199,15 @@ abstract here...
 %
 %  Use this command to print the description
 %
-\printccsdesc
+%\printccsdesc
+%
+%% We no longer use \terms command
+%%\terms{Theory}
+%
+%\keywords{ACM proceedings; \LaTeX; text tagging}
 
-% We no longer use \terms command
-%\terms{Theory}
 
-\keywords{ACM proceedings; \LaTeX; text tagging}
-
-
-\section{Introduction}
+\section{Summary}
 
 The good news is, with only a handful of manual
 settings\footnote{Two of these, the {\texttt{\char'134 numberofauthors}}
@@ -217,74 +218,22 @@ balanced column heights on the last page.}, the \LaTeX\ document
 class file handles all of this for you.
 
 
-\section{The {\secit Body} of The Paper}
+\section{Report}
 Typically, the body of a paper is organized
 into a hierarchical structure, with numbered or unnumbered
 headings for sections, subsections, sub-subsections, and even
 smaller sections. 
 
-Because the entire article is contained in
-the \textbf{document} environment, you can indicate the
-start of a new paragraph with a blank line in your
-input file; that is why this sentence forms a separate paragraph.
+\subsection{Problem 1}
 
-\subsection{Type Changes and {\subsecit Special} Characters}
+\subsection{Problem 2}
 
+\subsection{Problem 3}
 
+\subsection{Problem 4}
 
-\subsection{Math Equations}
-You may want to display math equations in three distinct styles:
-inline, numbered or non-numbered display.  Each of
-the three are discussed in the next sections.
+\subsection{Problem 5}
 
-\subsubsection{Inline (In-text) Equations}
-A formula that appears in the running text is called an
-inline or in-text formula.  It is produced by the
-\textbf{math} 
-
-\subsubsection{Display Equations}
-A numbered display equation -- one set off by vertical space
-from the text and centered horizontally -- is produced
-by the \textbf{equation} environment. An unnumbered display
-equation is produced by the \textbf{displaymath} environment.
-
-\subsection{Citations}
-Citations to articles \cite{bowman:reasoning,
-clark:pct, braams:babel, herlihy:methodology},
-conference proceedings \cite{clark:pct} or
-books \cite{salas:calculus, Lamport:LaTeX} listed
-in the Bibliography section of your
-article will occur throughout the text of your article.
-You should use BibTeX to automatically produce this bibliography;
-you simply need to insert one of several citation commands with
-a key of the item cited in the proper location in
-the \texttt{.tex} file \cite{Lamport:LaTeX}.
-The key is a short reference you invent to uniquely
-identify each work; in this sample document, the key is
-the first author's surname and a
-word from the title.  This identifying key is included
-with each item in the \texttt{.bib} file for your article.
-
-\subsection{Tables}
-
-
-Immediately following this sentence is the point at which
-Table 1 is included in the input file; compare the
-placement of the table here with the table in the printed
-dvi output of this document.
-
-
-\subsection{Figures}
-Like tables, figures cannot be split across pages; the
-best placement for them
-is typically the top or the bottom of the page nearest
-their initial cite.  To ensure this proper ``floating'' placement
-of figures, use the environment
-\textbf{figure} to enclose the figure and its caption.
-
-
-\subsection{Theorem-like Constructs}
-Other common constructs that may occur in your article are
 
 \section{Conclusions}
 This paragraph will end the body of this sample document.
@@ -316,10 +265,8 @@ examples only.
 %\balancecolumns
 \appendix
 %Appendix A
-\section{Headings in Appendices}
-The rules about hierarchical headings discussed above for
-the body of the article are different in the appendices.
-In the \textbf{appendix} environment, the command
+\section{first section}
+
 
 \subsection{References}
 Generated by bibtex from your ~.bib file.  Run latex,
@@ -329,11 +276,6 @@ the .tex source file and comment out
 the command \texttt{{\char'134}thebibliography}.
 % This next section command marks the start of
 % Appendix B, and does not continue the present hierarchy
-\section{More Help for the Hardy}
-The sig-alternate.cls file itself is chock-full of succinct
-and helpful comments.  If you consider yourself a moderately
-experienced to expert user of \LaTeX, you may find reading
-it useful but please remember not to change it.
 %\balancecolumns % GM June 2007
 % That's all folks!
 \end{document}
