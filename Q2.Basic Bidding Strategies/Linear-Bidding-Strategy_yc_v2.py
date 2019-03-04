@@ -187,8 +187,12 @@ def calculate_pCTR():
     new_pctrval = pd.DataFrame(new_pctrval)
     new_pctrval.to_csv('pCTRval.csv')
 
+    bid_ids = df_test['bidid']
     new_pctrtest = pd.DataFrame(new_pctrtest)
-    new_pctrtest.to_csv('pCTRtest.csv')
+
+    test_result = pd.concat([bid_ids, new_pctrtest], axis=1, sort=False)
+
+    test_result.to_csv('pCTRtest.csv')
 
     fpr, tpr, thresholds = metrics.roc_curve(df_val.click, new_pctrval)
     metrics.auc(fpr, tpr)
@@ -243,7 +247,7 @@ def linear_bidding():
 
 
 
-# calculate_pCTR()
+calculate_pCTR()
 
-linear_bidding()
+#linear_bidding()
 
