@@ -7,7 +7,7 @@ import datetime
 
 
 validation_df = pd.read_csv("../we_data/validation.csv")
-# train_df = pd.read_csv("../we_data/train.csv")
+# validation_df = pd.read_csv("../we_data/train.csv")
 
 print("data fetched")
 budget=6250*1000
@@ -27,33 +27,6 @@ maxCustRange = np.arange(71, 161, step_size) # determines the range that bids sh
 pd.set_option('display.max_columns', None)
 
 
-def plotResults(Matrix):
-
-    ax = sns.heatmap(Matrix, linewidth=0, xticklabels=minCustRange, yticklabels=maxCustRange[::-1], cmap="Greens") #, annot=True
-    ax.set(xlabel='lower bound for random bid', ylabel='upper bound for random bid', title="Clicks by bounded random bids")
-    for label in ax.xaxis.get_ticklabels()[::1]:
-        label.set_visible(False)
-    for label in ax.xaxis.get_ticklabels()[::5]:
-        label.set_visible(True)
-    for label in ax.yaxis.get_ticklabels()[::1]:
-        label.set_visible(False)
-    for label in ax.yaxis.get_ticklabels()[::5]:
-        label.set_visible(True)
-        
-#     for label in ax.xaxis.get_ticklabels()[::2]:
-#         label.set_visible(False)    
-#     for label in ax.yaxis.get_ticklabels()[::2]:
-#         label.set_visible(False)    
-        
-        
-    plt.savefig('RandomBidResults.png')
-    plt.show()
-    
-    useless = 0
-    return useless
-
-
-
 def EvalBidClicksOnly(dataframe, bidprice,budget,size):
     
     AdjustedBudget=(budget/size)*dataframe.shape[0]
@@ -62,7 +35,7 @@ def EvalBidClicksOnly(dataframe, bidprice,budget,size):
     #tempData['ConstBid']=constant
     tempData['ConstBid'] = bidprice
 
-    tempData['trueValues'] = np.where(tempData["payprice"]<tempData['ConstBid'],1,0)
+    tempData['trueValues'] = np.where(tempData["payprice"]<=tempData['ConstBid'],1,0)
     tempData['ModelPays'] = tempData['trueValues']*tempData['payprice']
     tempData['cumsum'] = tempData['ModelPays'].cumsum()
     lastRowToInclude = np.argmax(tempData['cumsum'].as_matrix()>AdjustedBudget)
@@ -81,6 +54,13 @@ def EvalBidClicksOnly(dataframe, bidprice,budget,size):
     #clicks = shortData.loc[shortData['ModelPays'] > 0 , 'click'].sum()
     #print("clicks:",clicks)
 
+def plot_img(x_list, y_list):
+    plt.plot(x_list, y_list, 'ro')
+    plt.axis([0, 310, 0, 150])
+    plt.ylabel('clicks')
+    plt.xlabel('constant bidding price')
+    plt.savefig('constant_bidding.png')
+    plt.show()
 
 def constant_bidding():
     click_list = []
@@ -91,10 +71,16 @@ def constant_bidding():
         print("bidding_price: {}; clicks: {}".format(i, clicks))
 
     df = pd.DataFrame({'bidding_price': list(range(1, maxBid + 1)), 'clicks': click_list})
-    df.to_csv('constant_bidding_clicks.csv', encoding='utf-8', index=False)
+    df.to_csv('constant_bidding_clicks_training_set.csv', encoding='utf-8', index=False)
+    plot_img(list(range(1, maxBid + 1)), click_list)
+
+def evaluation(constant_price):
+    clicks = EvalBidClicksOnly(validation_df, constant_price, budget,validation_df.shape[0])
+    print(clicks)
 
 
-constant_bidding()
+# constant_bidding()
+evaluation(25)
 
 
 
