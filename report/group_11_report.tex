@@ -114,6 +114,8 @@ clicks&12& 15&39\\
 Obviously, the behavior of the linear bidding strategy is much better than random bidding and constant bidding strategies. The optimal value of clicks in linear bidding is 39 while the ones of constant bidding and random bidding are merely 12 and 15 separately.
 
 \subsection{Problem 4: Non-Linear Bidding Strategy}
+We calculate the non-linear bidding price based on ORTB (equation 4), and we step through some combination of c and lamda to find the optimal pair generating the optimal bid prices. We find the value of clicks is 39 when c equals to 39 and lamda equals to 1.31072e-05. Therefore, our non-linear bidding strategy just generates the same result as linear bidding strategy.
+\begin{equation}bidPrice=\sqrt{\frac{c}{\lambda} * pCTR + c^2} - c\end{equation}
 
 \subsection{Problem 5: Multiagent Bidding Strategy}
 
