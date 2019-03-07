@@ -86,6 +86,32 @@ The highest clicks are 132 generated from range(30, 40) and the second highest c
 \subsubsection{Competition among homogeneous random bidding agents}
 
 \subsection{Problem 3: Linear Bidding Strategy}
+In order to apply CTR estimation to for a linear bidding strategy, we initially retrieve the these features as independent variables X: day, hour, region, ad exchange, slot width, slot height, advertiser, slot visibility, slot format, OS, browser, and slot price from the data set. Specifically, we categorize the slot price to five categories based on the price values, and we extract the OS and browser from the column useragent. And the rest features could be simply fetched from the data. The click from the data is our predictor Y.
+Afterwards, we import the Logistic Regression model from sklearn and train the model with the independent variables and predictor from the training set. Then we use the trained model to predict the click of test data and validation data separately. The pCTR of the validation data could be calculated with the equation 2.
+\begin{equation}pCTR=\frac{numOfClicks}{numOfWinningImpressions}\end{equation}
+
+The bid price for each bid is calculated as equation 3. As shown in Figure 3, the total clicks increase sharply when base bid increases from 1 to 20 and drop smoothly after then. The value clicks is maximized as 39 when the base bid is 20.
+
+\begin{equation}bidPrice=\frac{baseBidPrice*pCTR}{avgCTR}\end{equation}
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{report/base_bid_price.png}
+\caption{Validation set - base price and clicks}
+\end{figure}
+
+Comparison:
+\begin{table}
+\centering
+\caption{Behavior Comparison}
+\begin{tabular}{|c|c|c|l|} \hline
+&Constant Bidding&Random Bidding&Linear Bidding\\ \hline
+price&24&range(0, 50)&20(base)\\ \hline
+clicks&12& 15&39\\
+\hline\end{tabular}
+\end{table}
+
+Obviously, the behavior of the linear bidding strategy is much better than random bidding and constant bidding strategies. The optimal value of clicks in linear bidding is 39 while the ones of constant bidding and random bidding are merely 12 and 15 separately.
 
 \subsection{Problem 4: Non-Linear Bidding Strategy}
 
