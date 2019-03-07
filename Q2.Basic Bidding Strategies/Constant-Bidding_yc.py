@@ -8,12 +8,13 @@ import datetime
 
 validation_df = pd.read_csv("../we_data/validation.csv")
 train_df = pd.read_csv("../we_data/train.csv")
+size = train_df.shape[0]
 
 print("data fetched")
 budget=6250*1000
 
-# minBid=np.min(validation_df["payprice"].values)
-minBid=20
+minBid=np.min(validation_df["payprice"].values)
+# minBid=20
 
 maxBid=np.max(validation_df["payprice"].values)
 
@@ -64,22 +65,24 @@ def plot_img(x_list, y_list):
     plt.savefig('constant_bidding.png')
     plt.show()
 
-def constant_bidding():
+def constant_bidding(df):
     click_list = []
 
     for i in range(minBid+1, maxBid + 1):
-        clicks = EvalBidClicksOnly(train_df, i, budget,validation_df.shape[0])
+        clicks = EvalBidClicksOnly(df, i, budget,df.shape[0])
         click_list.append(clicks)
         print("bidding_price: {}; clicks: {}".format(i, clicks))
 
-    # df = pd.DataFrame({'bidding_price': list(range(1, maxBid + 1)), 'clicks': click_list})
-    # df.to_csv('constant_bidding_clicks_training_set.csv', encoding='utf-8', index=False)
-    # plot_img(list(range(1, maxBid + 1)), click_list)
+    df = pd.DataFrame({'bidding_price': list(range(1, maxBid + 1)), 'clicks': click_list})
+    df.to_csv('constant_bidding_clicks_training_set.csv', encoding='utf-8', index=False)
+    # df.to_csv('constant_bidding_clicks_validation_set.csv', encoding='utf-8', index=False)
 
-def evaluation(constant_price):
-    clicks = EvalBidClicksOnly(validation_df, constant_price, budget,validation_df.shape[0])
+    plot_img(list(range(1, maxBid + 1)), click_list)
+
+def evaluation(constant_price, df):
+    clicks = EvalBidClicksOnly(df, constant_price, budget, size)
     print(clicks)
 
-
-constant_bidding()
-# evaluation(25)
+constant_bidding(train_df)
+# constant_bidding(validation_df)
+# evaluation(25, validation_df)

@@ -5,35 +5,6 @@ from random import randint
 import seaborn as sns
 import datetime 
 
-
-
-
-def plotResults(Matrix):
-
-    ax = sns.heatmap(Matrix, linewidth=0, xticklabels=minCustRange, yticklabels=maxCustRange[::-1], cmap="Greens") #, annot=True
-    ax.set(xlabel='lower bound for random bid', ylabel='upper bound for random bid', title="Clicks by bounded random bids")
-    for label in ax.xaxis.get_ticklabels()[::1]:
-        label.set_visible(False)
-    for label in ax.xaxis.get_ticklabels()[::5]:
-        label.set_visible(True)
-    for label in ax.yaxis.get_ticklabels()[::1]:
-        label.set_visible(False)
-    for label in ax.yaxis.get_ticklabels()[::5]:
-        label.set_visible(True)
-        
-    plt.savefig('RandomBidResults.png')
-    plt.show()
-    
-    useless = 0
-    return useless
-
-
-
-
-
-
-
-
 def EvalRandBidClicksOnly(dataframe, lowerBound, upperBound, budget, size):
     AdjustedBudget=(budget/size)*dataframe.shape[0]
     tempData=dataframe
@@ -53,9 +24,14 @@ def EvalRandBidClicksOnly(dataframe, lowerBound, upperBound, budget, size):
     return clicks
 
 
+def random_bidding_run(df, output):
+    minBid=np.min(df["payprice"].values)
+    maxBid=np.max(df["payprice"].values)
+
+    print("minBid: {}".format(minBid))
+    print("maxBid: {}".format(maxBid))
 
 
-def random_bidding_run():
     minBidRange = list(range(0, 110, 10))
     click_list = []
 
@@ -68,32 +44,30 @@ def random_bidding_run():
             minValue.append(minBid)
             maxValue.append(maxBid)
 
-            clicks = EvalRandBidClicksOnly(validation_df, minBid, maxBid, budget,validation_df.shape[0])
+            clicks = EvalRandBidClicksOnly(df, minBid, maxBid, budget, size)
             click_list.append(clicks)
             print("min: {}; max: {}; clicks: {}".format(minBid, maxBid, clicks))
 
     df = pd.DataFrame({'minValue': minValue, 'maxValue': maxValue, 'clicks': click_list})
-    df.to_csv('random_bidding_clicks.csv', encoding='utf-8', index=False)
-
-
+    df.to_csv(output, encoding='utf-8', index=False)
 
 
 if __name__ == "__main__":
     validation_df = pd.read_csv("../we_data/validation.csv")
+    train_df = pd.read_csv("../we_data/train.csv")
 
+    size = train_df.shape[0]
     print("data fetched")
     budget=6250*1000
 
-    minBid=np.min(validation_df["payprice"].values)
-    maxBid=np.max(validation_df["payprice"].values)
+    random_bidding_run(validation_df, 'random_bidding_validation.csv')
+    random_bidding_run(train_df, 'random_bidding_train.csv')
 
-    print("minBid: {}".format(minBid))
-    print("maxBid: {}".format(maxBid))
 
-    step_size = 1
-    custRange = np.arange(minBid+1, maxBid+5,step_size) # determines the range that bids should be in
+    # step_size = 1
+    # custRange = np.arange(minBid+1, maxBid+5,step_size) # determines the range that bids should be in
 
-    minCustRange = np.arange(21, 91, step_size) # determines the range that bids should be in
-    maxCustRange = np.arange(71, 161, step_size) # determines the range that bids should be in
+    # minCustRange = np.arange(21, 91, step_size) # determines the range that bids should be in
+    # maxCustRange = np.arange(71, 161, step_size) # determines the range that bids should be in
 
-    pd.set_option('display.max_columns', None)
+    # pd.set_option('display.max_columns', None)
