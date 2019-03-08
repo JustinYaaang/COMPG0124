@@ -56,18 +56,11 @@ if __name__ == "__main__":
     validation_df = pd.read_csv("../we_data/validation.csv")
     train_df = pd.read_csv("../we_data/train.csv")
 
-    size = train_df.shape[0]
+    size = validation_df.shape[0]
     print("data fetched")
     budget=6250*1000
 
-    random_bidding_run(validation_df, 'random_bidding_validation.csv')
+    # random_bidding_run(validation_df, 'random_bidding_validation.csv')
     random_bidding_run(train_df, 'random_bidding_train.csv')
 
 
-    # step_size = 1
-    # custRange = np.arange(minBid+1, maxBid+5,step_size) # determines the range that bids should be in
-
-    # minCustRange = np.arange(21, 91, step_size) # determines the range that bids should be in
-    # maxCustRange = np.arange(71, 161, step_size) # determines the range that bids should be in
-
-    # pd.set_option('display.max_columns', None)

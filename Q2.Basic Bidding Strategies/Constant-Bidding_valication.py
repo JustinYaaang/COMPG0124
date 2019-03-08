@@ -8,8 +8,10 @@ import datetime
 
 validation_df = pd.read_csv("../we_data/validation.csv")
 train_df = pd.read_csv("../we_data/train.csv")
-size = validation_df.shape[0]
-
+size = train_df.shape[0]
+print("train_df: {}".format(size))
+print("validation_df: {}".format(validation_df.shape[0]))
+print(validation_df.shape[0]/size)
 print("data fetched")
 budget=6250*1000
 
@@ -57,32 +59,32 @@ def EvalBidClicksOnly(dataframe, bidprice,budget,size):
     # clicks = shortData.loc[shortData['ModelPays'] > 0 , 'click'].sum()
     # print("clicks:",clicks)
 
-def plot_img(x_list, y_list, max_click_boundary):
+def plot_img(x_list, y_list):
     plt.plot(x_list, y_list, 'ro')
-    plt.axis([0, 310, 0, max_click_boundary])
+    plt.axis([0, 310, 0, 150])
     plt.ylabel('clicks')
     plt.xlabel('constant bidding price')
-    plt.savefig('constant_bidding.png')
+    plt.savefig('constant_bidding_validation.png')
     plt.show()
 
-def constant_bidding(df, max_click_boundary):
+def constant_bidding(df):
     click_list = []
 
     for i in range(minBid+1, maxBid + 1):
-        clicks = EvalBidClicksOnly(df, i, budget,size)
+        clicks = EvalBidClicksOnly(df, i, budget, size)
         click_list.append(clicks)
         print("bidding_price: {}; clicks: {}".format(i, clicks))
 
     df = pd.DataFrame({'bidding_price': list(range(1, maxBid + 1)), 'clicks': click_list})
-    df.to_csv('constant_bidding_clicks_training_set.csv', encoding='utf-8', index=False)
-    # df.to_csv('constant_bidding_clicks_validation_set.csv', encoding='utf-8', index=False)
+    # df.to_csv('constant_bidding_clicks_training_set.csv', encoding='utf-8', index=False)
+    df.to_csv('constant_bidding_clicks_validation_set.csv', encoding='utf-8', index=False)
 
-    plot_img(list(range(1, maxBid + 1)), click_list, max_click_boundary)
+    plot_img(list(range(1, maxBid + 1)), click_list)
 
 def evaluation(constant_price, df):
     clicks = EvalBidClicksOnly(df, constant_price, budget, size)
     print(clicks)
 
-constant_bidding(train_df, 700)
-# constant_bidding(validation_df)
+# constant_bidding(train_df)
+constant_bidding(validation_df)
 # evaluation(25, validation_df)

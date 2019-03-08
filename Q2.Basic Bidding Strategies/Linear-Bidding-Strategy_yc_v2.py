@@ -221,20 +221,34 @@ def EvalBidByClicksOnly(dataframe, bids, budget, size):
     
     return clicks
 
+def plot_img(x_list, y_list):
+    plt.plot(x_list, y_list, 'ro')
+    plt.axis([0, 310, 0, 150])
+    plt.ylabel('clicks')
+    plt.xlabel('base bid price')
+    plt.savefig('base_bid_price.png')
+    plt.show()
 
-def linear_bidding():
+
+def linear_bidding_val():
     pCTRval = pd.read_csv('pCTRval_retrieved.csv')
     df_val = pd.read_csv('../we_data/validation.csv')
+    train_df = pd.read_csv("../we_data/train.csv")
+    test_df = pd.read_csv("../we_data/test.csv")
 
     avgCTR = df_val.click.sum() / df_val.bidid.count()
     print(pCTRval.pCTR.sum() / df_val.bidid.count())
     print(avgCTR)
+    
     lower_bound, upper_bound = 1, 300
     best_base_bid, max_clicks = 1, 0
+    # size = test_df.shape[0]
     size = df_val.shape[0]
     click_list = []
+    base_bid_list = []
     for base_bid in range(1, upper_bound + 1):
         bids = pCTRval['pCTR'] * base_bid / avgCTR
+        base_bid_list.append(base_bid)
         clicks = EvalBidByClicksOnly(df_val, bids, budget, size)
         print("base_bid: {}, clicks: {}".format(base_bid, clicks))
 
@@ -244,10 +258,40 @@ def linear_bidding():
         click_list.append(clicks)
     print("best_base_bid: {}; max_clicks: {}".format(best_base_bid, max_clicks))
     print(click_list)
+    plot_img(base_bid_list, click_list)
 
 
+def generate_test():
+    print("COOL")
 
-calculate_pCTR()
+    pCTRtest = pd.read_csv('pCTRtest.csv')
+    pCTRval = pd.read_csv('pCTRval_retrieved.csv')
+    df_val = pd.read_csv('../we_data/validation.csv')
 
-#linear_bidding()
+    avgCTR = df_val.click.sum() / df_val.bidid.count()
+    fack_avgCTR = pCTRval.pCTR.sum() / pCTRval.pCTR.count()
+    parameter = avgCTR / fack_avgCTR
+    base_bid = 67
+
+    print("real avgCTR: {}".format(avgCTR))
+    print("fake avgCTR: {}".format(fack_avgCTR))
+    print("parameter: {}".format(parameter))
+
+    
+    avgCTRtest = pCTRtest.pCTR.sum() / pCTRtest.pCTR.count()
+    bid_ids = pCTRtest['bidid']
+    bids = pCTRtest['pCTR'] * base_bid / (avgCTRtest * parameter)
+
+    res = pd.concat([bid_ids, bids], axis=1)
+    res.to_csv('submission_yc.csv')
+
+# calculate_pCTR()
+
+linear_bidding_val()
+# linear_bidding_for_test_data()
+
+
+# best_base_bid: 67; max_clicks: 124
+
+# generate_test()
 

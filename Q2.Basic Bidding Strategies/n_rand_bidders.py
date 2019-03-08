@@ -54,11 +54,12 @@ def simulate_n_random_bidders(lower, upper, dataframe, nb_agents):
 
 
 
-def simulate_n_random_bidders_v2(lower, upper, dataframe, nb_agents):
+def simulate_n_random_bidders_v2(lower, upper, dataframe, nb_agents, size):
     # dataframe.shape[0]: nb of rows, i.e. nb of examples
     all_bids = get_random_bids(lower, upper+1, dataframe.shape[0], nb_agents) 
     agents = get_agents(nb_agents)
     payprice = get_payprices(dataframe)
+    AdjustedBudget=(budget/size)*dataframe.shape[0]
 
     used_budgets, total_clicks = [0] * nb_agents, 0
 
@@ -74,9 +75,9 @@ def simulate_n_random_bidders_v2(lower, upper, dataframe, nb_agents):
             total_clicks += clicks[i]
         # else:
         #     print("payprice[i]: {}, all_bids[i, index_of_max]: {}".format(payprice[i], all_bids[i, index_of_max]))
-    print(used_budgets)
-    print("lower bound: {}, upper bound: {}, the max budget spent: {}".format(lower, upper, max(used_budgets)))
-    print(total_clicks)
+    # print(used_budgets)
+    # print("lower bound: {}, upper bound: {}, the max budget spent: {}".format(lower, upper, max(used_budgets)))
+    # print(total_clicks)
     return total_clicks if max(used_budgets) < budget else 0
 
 
@@ -101,36 +102,61 @@ def main():
     plt.show()
     print(sum(clicks_per_agent))
 
-def main2():
+def main2(nb_agents):
+    print("agent number: {}".format(nb_agents))
     # lower = 30
     # upper = 110
-    nb_agents = 50
     dataframe = pd.read_csv('../we_data/validation.csv')
+    df_train = pd.read_csv('../we_data/train.csv')
+    size = df_train.shape[0]
     max_clicks = 0
-    ans = []
-    print("max")
-    print(np.amax(get_payprices(dataframe)))
 
+    # print("max")
+    # print(np.amax(get_payprices(dataframe)))
+
+    lower_list, upper_list, click_list = [], [], []
     best_lower, best_upper = 0, 0
-    for lower in range(10, 300, 10):
-        upper = 300
-        # if not (lower == 190 and upper == 300):
-        #     continue
-        cur_clicks = simulate_n_random_bidders_v2(lower, upper, dataframe, nb_agents)
-        # if max_clicks < cur_clicks:
-        #     max_clicks = cur_clicks
-        #     best_lower = lower
-        #     best_upper = upper
-        if cur_clicks == np.sum(get_clicks(dataframe)):
-            ans.append([cur_clicks, lower, upper])
+    for lower in range(50, 300, 20):
+        print("lower: {}".format(lower))
+        for add in range(10, 260, 20):
+            upper = lower + add
+            if upper > 300:
+                continue
+
+            cur_clicks = simulate_n_random_bidders_v2(lower, upper, dataframe, nb_agents, size)
+            if max_clicks < cur_clicks:
+                max_clicks = cur_clicks
+                best_lower = lower
+                best_upper = upper
+            lower_list.append(lower)
+            upper_list.append(upper)
+            click_list.append(cur_clicks)
+    
+    df = pd.DataFrame({'upper': upper_list, 'lower': lower_list, 'clicks': click_list})
+    df.to_csv('n_random_bidder2.csv', encoding='utf-8', index=False)
+
     print("max_clicks: {}, lower: {}, upper: {}".format(max_clicks, best_lower, best_upper))
-    print(ans)
 
 
 if __name__ == "__main__":
-    main2()
+    for i in range(60, 110, 10):
+        main2(i)
 
-# [[202, 10, 300], [202, 20, 300], [202, 60, 300], [202, 70, 300], [202, 100, 300], [202, 140, 300], [202, 160, 300], [202, 190, 300], [202, 200, 300], [202, 230, 300], [202, 260, 300], [202, 270, 300], [202, 280, 300]]
+# 50
+# max_clicks: 202, lower: 70, upper: 300
+# 60
+# max_clicks: 202, lower: 50, upper: 300
+# 70
+# max_clicks: 202, lower: 90, upper: 300
+# 80
+# max_clicks: 202, lower: 170, upper: 300
+# 90
+# max_clicks: 202, lower: 90, upper: 300
+# 100
+# max_clicks: 202, lower: 70, upper: 300
+
+
+
 
 
 
