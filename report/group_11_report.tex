@@ -1,4 +1,5 @@
 \documentclass{sig-alternate-05-2015}
+\graphicspath{ {./images/} }
 
 \makeatletter
 \def\@copyrightspace{\relax}
@@ -33,7 +34,6 @@ Chen Song \\
 
 \section{Introduction}
 
-\section{Literature Review}
 
 \section{Approach and Result}
 Typically, the body of a paper is organized
@@ -42,7 +42,7 @@ headings for sections, subsections, sub-subsections, and even
 smaller sections.
 \footnote{This is the second footnote.}
 
-\subsection{Problem 1: Data Exploration}
+\subsection{Problem 1: Data Exploration and Literature Review}
 
 \subsection{Problem 2: Basic Bidding Strategy}
 In this section, we analyse two basic bidding strategies, which are Constant Bidding Strategy and Random Bidding Strategy, and evaluate their performance based on the number of clicks within a limited budget of 6,250 CNY fen. 
@@ -64,13 +64,13 @@ Figure 2 shows the changes of number of clicks depending on bid price in the val
 
 \begin{figure}
 \centering
-\includegraphics[height=2in, width=2in]{report/constant_bidding.png}
+\includegraphics[height=2in, width=2in]{images/constant_bidding.png}
 \caption{Validation set - bid price and clicks}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[height=2in, width=2in]{report/constant_bidding_validation.png}
+\includegraphics[height=2in, width=2in]{images/constant_bidding_validation.png}
 \caption{Validation set - bid price and clicks}
 \end{figure}
 
@@ -96,7 +96,7 @@ The bid price for each bid is calculated as equation 3. As shown in Figure 3, th
 
 \begin{figure}
 \centering
-\includegraphics[height=2in, width=2in]{report/base_bid_price.png}
+\includegraphics[height=2in, width=2in]{images/base_bid_price.png}
 \caption{Validation set - base price and clicks}
 \end{figure}
 
