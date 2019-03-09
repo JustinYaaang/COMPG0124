@@ -9,7 +9,8 @@ budget=6250*1000
 def constant_bidding_price_generation(m):
     price_list = []
     for i in range(1, m+1):
-        price_list.append(10*i)
+        price_list.append(100+10*i)
+    # print(price_list)
     return price_list
 
 
@@ -81,10 +82,16 @@ def multi_agent_simulation(all_bids, all_budgets, df_val, n):
     columns_of_maxes = np.argmax(all_bids, axis=1) 
     click_list = [0] * n
 
-    for i, index_of_max in enumerate(columns_of_maxes):
+    for i in range(len(columns_of_maxes)):
+        index_of_max = columns_of_maxes[i]
         if all_budgets[index_of_max] >= all_bids[i,index_of_max] >= payprices[i]:
             click_list[index_of_max] += click[i]
+            # if 19 < index_of_max <= 39:
+            #     print(i)
             all_budgets[index_of_max] -= all_bids[i,index_of_max]
+        elif all_bids[i,index_of_max] >= payprices[i] > all_budgets[index_of_max]:
+            all_bids[:, index_of_max] = 0
+            columns_of_maxes = np.argmax(all_bids, axis=1) 
 
     print(click_list)
 
@@ -136,12 +143,12 @@ def main():
     multi_agent_simulation(all_bids, all_budgets, df_val, n)
 
 
-main()
+# main()
 
-# a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-# for i in range(80):
-#     if a[i] > 0:
-#         print("i: {}, clicks: {}".format(i, a[i]))
+a = [4, 1, 3, 2, 0, 1, 6, 5, 2, 2, 0, 4, 1, 3, 5, 4, 4, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 28, 26, 24, 14, 6, 1, 1, 3, 1, 2, 0, 2, 3, 1, 1, 0, 5, 6, 3, 5, 0, 3, 1, 2]
+for i in range(80):
+    if a[i] > 0:
+        print("i: {}, clicks: {}".format(i, a[i]))
 
 
 
