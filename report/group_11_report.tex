@@ -54,6 +54,14 @@ Then, a bidder has the following dimensions to consider for its bidding campaign
 The bidder wants to optimise the number of clicks it gets by choosing a good KPI predicting model and a good bidding function (in our specific setting).
 In addition to this, one other constraint there is is that the whole pipeline of KPI prediction + bid function has to be calculated with minimal latency (bids often have to be submitted within a short timeframe, like 100ms) \cite{MILLI, PHD1}.
 
+\section{Deliverables}
+
+Our deliverables are as follows: \\
+- Our bidding prices on the testing set, \\
+testing\_bidding\_price\_criterion\_1.csv, \\
+testing\_bidding\_price\_criterion\_2.csv,
+that account for the different winning criterions. \\
+- The Github repo that contains the source code of our project: https://github.com/JustinYaaang/COMPG0124.
 
 \section{Approach and Results}
 
@@ -86,8 +94,8 @@ the advertiser (in our setting) wants to maximize the number of clicks it gets f
 Knowing how fast one should burn through the given budget is a difficult problem\cite{BID1}:
 If the strategy bids relatively high values, the budget might be spent early and some potentially valuable slots might be missed.
 If the strategy is relatively more conservative, then the budget might not be fully spent and some valuable slots might be underbid on.
-The problem is even more complex when considering the fact that there are a number of heterogeneous and unpredictable other agents with their own bidding strategies competing against a given bidder. \cite{BID1}
-Determining the best rate of spending is an open question. \cite{OPENQ}
+The problem is even more complex when considering the fact that there are a number of heterogeneous and unpredictable other agents with their own bidding strategies competing against a given bidder \cite{BID1}.
+%Determining the best rate of spending is an open question \cite{OPENQ}.
 
 
 
