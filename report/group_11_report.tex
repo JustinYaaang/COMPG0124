@@ -167,6 +167,24 @@ The highest clicks are 628 generated from range 10 to 130 in the training set wi
 
 \subsubsection{Competition among homogeneous random bidding agents}
 
+Competition among homogeneous random bidding agents:
+In the sub-problem, we first step into different combinations of lower bound and upper bound. And for each pair of lower bound and upper bound, we generate n agents who are using random bidding strategy with the price with the selected bounds. Then we add the click to the winner following criterion 2 for each bid. 
+Our criterion for bound comparison: the average click among the agents is criterion of winning bounds. And the optimal bounds should generate the highest average clicks (total clicks). Table 2 is  optimal bounds and total clicks of different number of agents. 
+
+
+\begin{table}
+\centering
+\caption{Optimal Bounds and Clicks}
+\begin{tabular}{|c|c|c|c|c|c|l|} \hline
+agent number&50&60&70&80&90&100\\ \hline
+lower bound&90&90&110&70&130&50\\ \hline
+upper bound&300&300&300&300&300&300\\ \hline
+clicks&202& 202&202&202&202&202\\
+\hline\end{tabular}
+\end{table}
+
+Consequently, the optimal upper bound is 300 for all of the group of multiple agent bidding, which is much higher than the single agent bidding. The reason for this high upper bound is that the strategy of multiple agent bidding is to maximize the total number of clicks, and the higher upper bound is, the larger opportunity that the total clicks could be maximized. In other words, the strategy for multi-agent random bidding to is maximize the benefits of the group.
+
 %%%%%
 \subsection{Problem 3: Linear Bidding Strategy}
 In order to apply CTR estimation to for a linear bidding strategy, we initially retrieve the these features as independent variables X: day, hour, region, ad exchange, slot width, slot height, advertiser, slot visibility, slot format, OS, browser, and slot price from the data set. Specifically, we categorise the slot price to five categories based on the price values, and we extract the OS and browser from the column useragent. And the rest features could be simply fetched from the data. The click from the data is our predictor Y.
@@ -204,6 +222,33 @@ We calculate the non-linear bidding price based on ORTB (equation 4), and we ste
 
 %%%%%%%
 \subsection{Problem 5: Multi-agent Bidding Strategy}
+
+In order to find a good bid strategy for Winning criterion 2, we train a multiagent model where 80 agents attend to the competition by using different strategies:
+
+1)	There are 20 agents using constant bidding strategies with constant bidding prices from 110 to 300 intervals 10.
+
+2)	There are 20 agents using the same random bidding strategy found in previous sub-problem 2.2.3 (multi-agent random bidding strategy).
+
+3)	There are 20 agents using linear bidding strategies with the base bid prices from 110 to 300 intervals 10.
+
+4)	In order to find a good strategy for non-linear bidding, we run a twenty-agent competition with different combination of parameters (c and lambda are equal to 50 and 2.048e-07 separately) to find the optimal non-linear strategy. Then there are 20 agents using this same non-linear bidding strategy.
+
+Then we concatenate the bid prices of these 80 agents together, assign each agent limited budget, and start the competition. The agent wins in a bid if his or her bid in this row is greater than or equal to all the other agents as well as the pay price in the data. And this agent could gain a click if there is a click in this winning bid. Moreover, this agent needs to pay the second highest price and his budget will decrease by that price. Table 3 show the agent with the highest number of clicks in each strategy.
+
+\begin{table}
+\centering
+\caption{Best performance}
+\begin{tabular}{|c|c|c|c|l|} \hline
+&Constant &Random &Linear&Non-linear\\ \hline
+highest click&3&2&20&12\\
+\hline\end{tabular}
+\end{table}
+
+Analysis:
+
+1)	As expectation, both constant bidders and random bidders have a poor performance in this competition since they do not adjust their price based on data strategically.
+
+2)	Surprisingly, the best performer among the linear bidders gain a higher clicks than the best performer among the non-linear bidders. In our opinions, the reason for this behavior is that we did not implement enough training on the parameter discovery. Ideally, we are supposed to attempt more combination of parameters and implement the competition with more agents instead of merely twenty agents.
 
 \section{Conclusions}
 This paragraph will end the body of this sample document.
