@@ -141,7 +141,7 @@ Analysis:
 Figure 1 shows that how the value of click changes based on the increment of the constant bidding price. The clicks increase dramatically when the constant bidding price increases from 1 to 78 and the climax of clicks is 643 when the constant bidding price is 77. Then the clicks drop smoothly when the bidding price increases from 78 to 300.
 
 
-Figure 2 shows the changes of click value depending on bid price in the validation set with the standard budget. We could see the clicks are relatively high when the bid price is between 70 to 100. Surprisingly, the value of click is maximized as 68 when the bidding price is 77 or 79. Therefore, the finding in our training data is perfectly match the validation set.
+Figure 2 shows the changes of click value depending on bid price in the validation set with the standard budget. We could see the clicks are relatively high when the bid price is between 70 to 100. Surprisingly, the value of click is maximised as 68 when the bidding price is 77 or 79. Therefore, the finding in our training data is perfectly match the validation set.
 
 \begin{figure}
 \centering
@@ -162,7 +162,7 @@ Figure 2 shows the changes of click value depending on bid price in the validati
 In order to find the optimal bidding range for random bidding, we step through a range of lower bound and a range of upper bound to find out the bid price with the highest clicks from winning impressions. Similarly, we use the same method as the one in Constant Bidding Strategy to calculate the clicks. 
 
 Analysis: 
-The highest clicks are 628 generated from range 10 to 130 in the training set with the limited normalized budget. In the validation set, we find the highest clicks are 76 generated from the range 20 to 150. It is acceptable that the best range in these two sets are not far from each other.
+The highest clicks are 628 generated from range 10 to 130 in the training set with the limited normalised budget. In the validation set, we find the highest clicks are 76 generated from the range 20 to 150. It is acceptable that the best range in these two sets are not far from each other.
 
 
 \subsubsection{Competition among homogeneous random bidding agents}
@@ -183,7 +183,7 @@ clicks&202& 202&202&202&202&202\\
 \hline\end{tabular}
 \end{table}
 
-Consequently, the optimal upper bound is 300 for all of the group of multiple agent bidding, which is much higher than the single agent bidding. The reason for this high upper bound is that the strategy of multiple agent bidding is to maximize the total number of clicks, and the higher upper bound is, the larger opportunity that the total clicks could be maximized. In other words, the strategy for multi-agent random bidding to is maximize the benefits of the group.
+Consequently, the optimal upper bound is 300 for all of the group of multiple agent bidding, which is much higher than the single agent bidding. The reason for this high upper bound is that the strategy of multiple agent bidding is to maximize the total number of clicks, and the higher upper bound is, the larger opportunity that the total clicks could be maximised. In other words, the strategy for multi-agent random bidding to is maximize the benefits of the group.
 
 %%%%%
 \subsection{Problem 3: Linear Bidding Strategy}
@@ -223,7 +223,7 @@ We calculate the non-linear bidding price based on ORTB (equation 4), and we ste
 %%%%%%%
 \subsection{Problem 5: Multi-agent Bidding Strategy}
 
-In order to find a good bid strategy for Winning criterion 2, we train a multiagent model where 80 agents attend to the competition by using different strategies:
+In order to find a good bid strategy for Winning criterion 2, we train a multi-agent model where 80 agents attend to the competition by using different strategies:
 
 1)	There are 20 agents using constant bidding strategies with constant bidding prices from 110 to 300 intervals 10.
 
@@ -248,12 +248,23 @@ Analysis:
 
 1)	As expectation, both constant bidders and random bidders have a poor performance in this competition since they do not adjust their price based on data strategically.
 
-2)	Surprisingly, the best performer among the linear bidders gain a higher clicks than the best performer among the non-linear bidders. In our opinions, the reason for this behavior is that we did not implement enough training on the parameter discovery. Ideally, we are supposed to attempt more combination of parameters and implement the competition with more agents instead of merely twenty agents.
+2)	Surprisingly, the best performer among the linear bidders gain a higher clicks than the best performer among the non-linear bidders. In our opinions, the reason for this behaviour is that we did not implement enough training on the parameter discovery. Ideally, we are supposed to attempt more combination of parameters and implement the competition with more agents instead of merely twenty agents.
 
-\section{Conclusions}
+\section{Conclusion}
 
+We recap on what we did for each problem.
 
-When we compare these four strategies for a single agent bidding, the performance rankings from high to low are Non-linear bidding strategy, Linear bidding strategy, random bidding strategy, and constant bidding strategy. However, surprisingly, in our multiply agent competition, the Linear bidding strategy performs better than Non-linear bidding strategy. We conclude that this phenomenon is because of the lack of training in the optimal parameter exploration for Non-linear bidding. It averagely takes four hours for a competition of twenty agents non-linear bidding with five hundred combination of parameter c and lamda. In order to improve our multiply agent non-linear bidding strategy, more combination should be evaluated.
+We started off by building a simple agent that bid a constant value for all slots, then found the optimal value of the bid to maximize the number of clicks earned by our agent.
+Then we built a bidder that chose a random bid from within a certain range for each slot, and found an optimal range.
+We then modelled 50-100 of these agents and studied the performance of the random bidding model in this setting.
+For the next part, we used a Logistic Regression model to predict the CTR of ad slots, and bid an amount linearly proportional to the predicted CTR.
+Then, keeping our predictions from the previous part, we built a non-linear bidding function.
+Finally, we simulated a number of heterogeneous agents to compete for the slots and analysed our model's performance in this setting.
+
+%
+%When we compare these four strategies for a single agent bidding, the performance rankings from high to low are Non-linear bidding strategy, Linear bidding strategy, random bidding strategy, and constant bidding strategy. 
+%However, surprisingly, in our multiply agent competition, the Linear bidding strategy performs better than Non-linear bidding strategy. 
+%We conclude that this phenomenon is because of the lack of training in the optimal parameter exploration for Non-linear bidding. It averagely takes four hours for a competition of twenty agents non-linear bidding with five hundred combination of parameter c and lambda. In order to improve our multiply agent non-linear bidding strategy, more combination should be evaluated.
 
 
 
@@ -272,8 +283,8 @@ When we compare these four strategies for a single agent bidding, the performanc
 
 
 
-\bibliographystyle{abbrv}
-\bibliography{sigproc}
+%\bibliographystyle{abbrv}
+%\bibliography{sigproc}
 \begin{thebibliography}{9}
 
 \bibitem{LOGREG1} 
