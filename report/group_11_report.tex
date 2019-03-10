@@ -93,6 +93,35 @@ Determining the best rate of spending is an open question. \cite{OPENQ}
 
 \subsubsection{Data Exploration}
 
+We analysed some aspects of the data with respect to the weekdays, the CPC, CTR, and payprice.
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{images/weekday_AC.png}
+\caption{Average Payprice wrt Weekday}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{images/weekday_CPC.png}
+\caption{Average CPC wrt Weekday}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{images/weekday_CTR.png}
+\caption{Average CTR wrt Weekday}
+\end{figure}
+
+As one can see on the figures below, CPC, CTR, and payprice are extremely variable throughout the week.
+The day with the lowest average CPC of 81 is day 2, and the highest CPC of 130 is attained on day 6.
+The CTR per weekday falls within the range of 0.0006 (at day 6) and 0.00095 at day 2.
+Finally, the payprice per weekday also belongs to a notable range, from 74 (on day 6) to 82 (on day 1).
+
+From further analysis, we observed that the CTR per slot and payprice per slot are positively correlated;
+This makes sense for our setting: assuming reasonable KPI predictive models, a slot with a high CTR would also tend to have a high pCTR,
+meaning it would also have a higher private value to bidders, and from this a higher payprice from the higher bids.
+
 
 
 
