@@ -54,6 +54,14 @@ Then, a bidder has the following dimensions to consider for its bidding campaign
 The bidder wants to optimise the number of clicks it gets by choosing a good KPI predicting model and a good bidding function (in our specific setting).
 In addition to this, one other constraint there is is that the whole pipeline of KPI prediction + bid function has to be calculated with minimal latency (bids often have to be submitted within a short timeframe, like 100ms) \cite{MILLI, PHD1}.
 
+\section{Deliverables}
+
+Our deliverables are as follows: \\
+- Our bidding prices on the testing set, \\
+testing\_bidding\_price\_criterion\_1.csv, \\
+testing\_bidding\_price\_criterion\_2.csv,
+that account for the different winning criterions. \\
+- The Github repo that contains the source code of our project: https://github.com/JustinYaaang/COMPG0124.
 
 \section{Approach and Results}
 
@@ -86,26 +94,55 @@ the advertiser (in our setting) wants to maximize the number of clicks it gets f
 Knowing how fast one should burn through the given budget is a difficult problem\cite{BID1}:
 If the strategy bids relatively high values, the budget might be spent early and some potentially valuable slots might be missed.
 If the strategy is relatively more conservative, then the budget might not be fully spent and some valuable slots might be underbid on.
-The problem is even more complex when considering the fact that there are a number of heterogeneous and unpredictable other agents with their own bidding strategies competing against a given bidder. \cite{BID1}
-Determining the best rate of spending is an open question. \cite{OPENQ}
+The problem is even more complex when considering the fact that there are a number of heterogeneous and unpredictable other agents with their own bidding strategies competing against a given bidder \cite{BID1}.
+%Determining the best rate of spending is an open question \cite{OPENQ}.
 
 
 
 \subsubsection{Data Exploration}
 
-%look at the paper he advised
-%get something working with the stats he did
-%at least a couple of them
-%with some commentary
+We analysed some aspects of the data with respect to the weekdays, the CPC, CTR, and payprice.
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{images/weekday_AC.png}
+\caption{Average Payprice wrt Weekday}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{images/weekday_CPC.png}
+\caption{Average CPC wrt Weekday}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[height=2in, width=2in]{images/weekday_CTR.png}
+\caption{Average CTR wrt Weekday}
+\end{figure}
+
+As one can see on the figures below, CPC, CTR, and payprice are extremely variable throughout the week.
+The day with the lowest average CPC of 81 is day 2, and the highest CPC of 130 is attained on day 6.
+The CTR per weekday falls within the range of 0.0006 (at day 6) and 0.00095 at day 2.
+Finally, the payprice per weekday also belongs to a notable range, from 74 (on day 6) to 82 (on day 1).
+
+From further analysis, we observed that the CTR per slot and payprice per slot are positively correlated;
+This makes sense for our setting: assuming reasonable KPI predictive models, a slot with a high CTR would also tend to have a high pCTR,
+meaning it would also have a higher private value to bidders, and from this a higher payprice from the higher bids.
+
+
+
 
 
 %%%%
 \subsection{Problem 2: Basic Bidding Strategy}
 In this section, we analyse two basic bidding strategies, which are Constant Bidding Strategy and Random Bidding Strategy, and evaluate their performance based on the number of clicks within a limited budget of 6,250 CNY fen. 
+
 Evaluation function: For the single-agent basic bidding strategies, the main metric to rank the strategies are based on the clicks from winning impressions.
 
 \subsubsection{Constant Bidding Strategy}
-In order to find an optimal constant value, we loop the constant bid prices from 0 to 300, which are the minimum bid price and maximum bid price, to find out the bid price with the highest clicks from winning impressions. Specifically, for each constant price, we retrieve the columns of 'payprice' and 'click' for all the bids in the training set. Then we compare our constant bid price with the 'payprice' for each bid and add up the click into our total clicks if our constant bid price is great than or equal to the 'payprice' while the total spend is calculated at the mean time. Afterwards we remove the clicks from bottom to top where the total spend has been over our limited budget.
+In order to find an optimal constant value, we loop the constant bid prices within a feasible range, from 0 to 300, which are the minimum bid price and maximum bid price of all the slots in the dataset, to find out the constant bid price with the highest clicks from winning impressions. 
+Specifically, for each constant price, we retrieve the columns of 'payprice' and 'click' for all the bids in the training set. Then we compare our constant bid price with the 'payprice' for each bid and add up the click into our total clicks if our constant bid price is great than or equal to the 'payprice' while the total spend is calculated at the mean time. Afterwards we remove the clicks from bottom to top where the total spend has been over our limited budget.
 In order to use the training set to find out a good price for validation set, initially we need to normalize the budget based on equation 1.
 
 \begin{equation}budget_{train}=\frac{sizeOfTrain}{sizeOfValidation} * budget_{validation}\end{equation}
@@ -114,18 +151,18 @@ Analysis:
 Figure 1 shows that how the value of click changes based on the increment of the constant bidding price. The clicks increase dramatically when the constant bidding price increases from 1 to 78 and the climax of clicks is 643 when the constant bidding price is 77. Then the clicks drop smoothly when the bidding price increases from 78 to 300.
 
 
-Figure 2 shows the changes of click value depending on bid price in the validation set with the standard budget. We could see the clicks are relatively high when the bid price is between 70 to 100. Surprisingly, the value of click is maximized as 68 when the bidding price is 77 or 79. Therefore, the finding in our training data is perfectly match the validation set.
+Figure 2 shows the changes of click value depending on bid price in the validation set with the standard budget. We could see the clicks are relatively high when the bid price is between 70 to 100. Surprisingly, the value of click is maximised as 68 when the bidding price is 77 or 79. Therefore, the findings in our training data match the validation set.
 
 \begin{figure}
 \centering
 \includegraphics[height=2in, width=2in]{images/constant_bidding.png}
-\caption{Training set - bid price and clicks}
+\caption{Training set - clicks wrt constant bid price}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[height=2in, width=2in]{images/constant_bidding_validation.png}
-\caption{Validation set - bid price and clicks}
+\caption{Validation set - clicks wrt constant bid price}
 \end{figure}
 
 
@@ -135,18 +172,36 @@ Figure 2 shows the changes of click value depending on bid price in the validati
 In order to find the optimal bidding range for random bidding, we step through a range of lower bound and a range of upper bound to find out the bid price with the highest clicks from winning impressions. Similarly, we use the same method as the one in Constant Bidding Strategy to calculate the clicks. 
 
 Analysis: 
-The highest clicks are 628 generated from range 10 to 130 in the training set with the limited normalized budget. In the validation set, we find the highest clicks are 76 generated from the range 20 to 150. It is acceptable that the best range in these two sets are not far from each other.
+The highest clicks are 628 generated from range 10 to 130 in the training set with the limited normalised budget. In the validation set, we find the highest clicks are 76 generated from the range 20 to 150. It is acceptable that the best range in these two sets are not far from each other.
 
 
 \subsubsection{Competition among homogeneous random bidding agents}
 
+Competition among homogeneous random bidding agents:
+In the sub-problem, we first step into different combinations of lower bound and upper bound. And for each pair of lower bound and upper bound, we generate n agents who are using random bidding strategy with the price with the selected bounds. Then we add the click to the winner following criterion 2 for each bid. 
+Our criterion for bound comparison: the average click among the agents is criterion of winning bounds. And the optimal bounds should generate the highest average clicks (total clicks). Table 2 shows optimal bounds and total clicks of different numbers of agents. 
+
+
+\begin{table}
+\centering
+\caption{Optimal Bounds and Clicks}
+\begin{tabular}{|c|c|c|c|c|c|l|} \hline
+agent number&50&60&70&80&90&100\\ \hline
+lower bound&90&90&110&70&130&50\\ \hline
+upper bound&300&300&300&300&300&300\\ \hline
+clicks&202& 202&202&202&202&202\\
+\hline\end{tabular}
+\end{table}
+
+Consequently, the optimal upper bound is 300 for all of the group of multiple agent bidding, which is much higher than the single agent bidding. The reason for this high upper bound is that the strategy of multiple agent bidding is to maximize the total number of clicks, and the higher upper bound is, the larger opportunity that the total clicks could be maximised. In other words, the strategy for multi-agent random bidding to is maximize the benefits of the group.
+
 %%%%%
 \subsection{Problem 3: Linear Bidding Strategy}
-In order to apply CTR estimation to for a linear bidding strategy, we initially retrieve the these features as independent variables X: day, hour, region, ad exchange, slot width, slot height, advertiser, slot visibility, slot format, OS, browser, and slot price from the data set. Specifically, we categorise the slot price to five categories based on the price values, and we extract the OS and browser from the column useragent. And the rest features could be simply fetched from the data. The click from the data is our predictor Y.
-Afterwards, we import the Logistic Regression model from sklearn and train the model with the independent variables and predictor from the training set. Then we use the trained model to predict the click of test data and validation data separately. The pCTR of the validation data could be calculated with the equation 2.
+In order to apply CTR estimation to for a linear bidding strategy, we initially retrieve these features as independent variables X: day, hour, region, ad exchange, slot width, slot height, advertiser, slot visibility, slot format, OS, browser, and slot price from the data set. Specifically, we categorise the slot price to five categories based on the price values, and we extract the OS and browser from the column useragent. The rest of the features is simply fetched from the data. The click from the data is our predictor Y.
+Afterwards, we use a Logistic Regression model, with a cross-entropy loss function, L2 regularization and train it with the independent variables and predictor from the training set. Then we use the trained model to predict the click of test data and validation data separately. The pCTR of the validation data could be calculated with the equation 2.
 \begin{equation}pCTR=\frac{numOfClicks}{numOfWinningImpressions}\end{equation}
 
-The bid price for each bid is calculated as equation 3. As shown in Figure 3, the total clicks increase sharply when base bid increases from 1 to 20 and drop smoothly after then. The value clicks is maximised as 39 when the base bid is 20.
+The bid price for each bid is calculated as equation 3. As shown in Figure 3, the total clicks increase sharply when the base bid increases from 1 to 20 and drop smoothly after then. The value clicks is maximised as 39 when the base bid is 20.
 
 \begin{equation}bidPrice=\frac{baseBidPrice*pCTR}{avgCTR}\end{equation}
 
@@ -178,12 +233,51 @@ We calculate the non-linear bidding price based on ORTB (equation 4), and we ste
 %%%%%%%
 \subsection{Problem 5: Multi-agent Bidding Strategy}
 
-\section{Conclusions}
-This paragraph will end the body of this sample document.
-Remember that you might still have Acknowledgments or
-Appendices; brief samples of these
-follow.
+In order to find a good bid strategy for Winning criterion 2, we train a multi-agent model where 80 agents attend to the competition by using different strategies:
 
+1)	There are 20 agents using constant bidding strategies with constant bidding prices from 110 to 300 intervals 10.
+
+2)	There are 20 agents using the same random bidding strategy found in previous sub-problem 2.2.3 (multi-agent random bidding strategy).
+
+3)	There are 20 agents using linear bidding strategies with the base bid prices from 110 to 300 intervals 10.
+
+4)	In order to find a good strategy for non-linear bidding, we run a twenty-agent competition with different combination of parameters (c and lambda are equal to 50 and 2.048e-07 separately) to find the optimal non-linear strategy. Then there are 20 agents using this same non-linear bidding strategy.
+
+Then we concatenate the bid prices of these 80 agents together, assign each agent limited budget, and start the competition. The agent wins in a bid if his or her bid in this row is greater than or equal to all the other agents as well as the pay price in the data. And this agent could gain a click if there is a click in this winning bid. Moreover, this agent needs to pay the second highest price and his budget will decrease by that price. Table 3 show the agent with the highest number of clicks in each strategy.
+
+\begin{table}
+\centering
+\caption{Best performance}
+\begin{tabular}{|c|c|c|c|l|} \hline
+&Constant &Random &Linear&Non-linear\\ \hline
+highest click&3&2&20&12\\
+\hline\end{tabular}
+\end{table}
+
+Analysis:
+
+1) As expected, both constant bidders and random bidders have a poor performance in this competition since they do not adjust their price based on data (like pCTR) strategically.
+
+2) Surprisingly, the best performer amongst the linear bidders gains a higher number of clicks than the best performer amongst the non-linear bidders. 
+In our opinions, the reason for this behaviour is that we did not implement enough training on the parameter discovery (in other words, we didn't test enough combinations of c and lambda). 
+Ideally, we are supposed to attempt more combination of parameters and implement the competition with more agents that just 20 (we chose 20 agents because of time constraints).
+
+\section{Conclusion}
+
+We recap on what we did for each problem.
+
+We started off by building a simple agent that bid a constant value for all slots, then found the optimal value of the bid to maximize the number of clicks earned by our agent.
+Then we built a bidder that chose a random bid from within a certain range for each slot, and found an optimal range.
+We then modelled 50-100 of these agents and studied the performance of the random bidding model in this setting.
+For the next part, we used a Logistic Regression model to predict the CTR of ad slots, and bid an amount linearly proportional to the predicted CTR.
+Then, keeping our predictions from the previous part, we built a non-linear bidding function.
+Finally, we simulated a number of heterogeneous agents to compete for the slots and analysed our model's performance in this setting.
+
+%
+We would briefly like to mention the relative performance of our models on the last problem.
+When we compare our four strategies for a single agent bidding, the performance rankings from high to low are Non-linear bidding strategy, Linear bidding strategy, random bidding strategy, and constant bidding strategy. 
+However, surprisingly, in our multi-agent competition, the linear bidding strategy performs better than the non-linear bidding strategy. 
+We conclude that this phenomenon is due to the lack of training in the optimal parameter exploration for non-linear bidding. It takes on average four hours for a competition of twenty agents non-linear bidding with five hundred combination of parameter c and lambda. If we had time to improve our non-linear model, we would have made a grid search considering a higher range of parameters.
 
 
 
@@ -201,8 +295,8 @@ follow.
 
 
 
-\bibliographystyle{abbrv}
-\bibliography{sigproc}
+%\bibliographystyle{abbrv}
+%\bibliography{sigproc}
 \begin{thebibliography}{9}
 
 \bibitem{LOGREG1} 
