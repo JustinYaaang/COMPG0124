@@ -7,13 +7,13 @@ import seaborn as sns
 
 
 
-def aggregated_CTR(dataset, columns = "weekday"):
-    feat = dataset[by].unique()
-    res = pd.DataFrame(columns = [columns, "CTR", "Cost", "CPC"])
+def aggregated_CTR(dataset, column = "weekday"):
+    feat = dataset[column].unique()
+    res = pd.DataFrame(columns = [column, "CTR", "Cost", "CPC"])
     i = 0
 
     for f in feat:
-        dataset_ = dataset.loc[dataset[by] == f]
+        dataset_ = dataset.loc[dataset[column] == f]
 
         impr = dataset_.shape[0]
         clicks = dataset_["click"].sum()
@@ -33,7 +33,7 @@ def aggregated_CTR(dataset, columns = "weekday"):
 def aggregated_statistics(dataset, columns):
     for column in columns:
         data = aggregated_CTR(dataset, column)
-        data[column] = data[requirement].map(lambda x: int(x))
+        data[column] = data[column].map(lambda x: int(x))
         data.sort_values(by = column)
 
         plt.figure(figsize = (6,6))
@@ -49,7 +49,7 @@ def aggregated_statistics(dataset, columns):
         plt.savefig(column+"_AC"+".png")
 
         plt.figure(figsize = (4,4))
-        sns.pointplot(x = requirement, y = "CPC", data = data, color = "black", capsize = 0.2)
+        sns.pointplot(x = column, y = "CPC", data = data, color = "black", capsize = 0.2)
         plt.ylabel("")
         plt.title("CPC")
         plt.savefig(column+"_CPC"+".png")
