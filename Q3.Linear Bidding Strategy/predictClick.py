@@ -1,6 +1,7 @@
 from dataReader import dataReader
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
+from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import r2_score
 import pandas as pd
 
@@ -14,7 +15,8 @@ class PredictClick():
         yTrain.fillna(0, inplace=True)
 
         # self._model = RandomForestClassifier(criterion='entropy', n_estimators=100, random_state=0, n_jobs=2)
-        self._model = DecisionTreeClassifier(criterion='entropy', max_depth=2, random_state=0)
+        # self._model = LogisticRegression(penalty = 'l1', max_iter = 100, C = 0.1, solver = 'saga',class_weight = 'unbalanced')
+        self._model = XGBClassifier(n_estimators = 500, max_depth = 8, learning_rate = 0.1, random_state = 7)
 
         self._model = self._model.fit(xTrain, yTrain)
 

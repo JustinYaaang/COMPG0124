@@ -20,7 +20,7 @@ test['OS'], test['browser'] = zip(*test['useragent'].map(lambda x: x.split('_'))
 
 def pre_process_data(df, enforce_cols=None):
     print("Input shape:\t{}".format(df.shape))
-    
+
     df.ix[df.slotprice.between(0, 10), 'slotpricebucket'] = 1
     df.ix[df.slotprice.between(11, 50), 'slotpricebucket'] = 2
     df.ix[df.slotprice.between(51, 100), 'slotpricebucket'] = 3
@@ -29,18 +29,20 @@ def pre_process_data(df, enforce_cols=None):
 
     pred=df.drop(['click','bidid','userid','IP','url','urlid','slotid','useragent','slotprice',
                  'bidprice','payprice','domain','slotwidth', 'slotheight'],axis=1)
-    
+
     # create dummy variables for categoricals
-    pred=pd.get_dummies(pred,dummy_na=True,columns=['weekday', 'hour', 
-                                                       'OS', 'browser', 
-                                                       'region', 'city', 'adexchange', 
-                                                       'slotvisibility', 'slotformat',
-                                                       'creative', 'slotpricebucket','advertiser'##'ip_block'
-                                                    ,'keypage','size'])
+    pred=pd.get_dummies(pred,dummy_na=True,columns=['weekday', 'hour',
+                                                       'OS', 'browser',
+                                                       'region', 'city'
+                                                       # , 'adexchange',
+                                                    #    'slotvisibility', 'slotformat',
+                                                    #    'creative', 'slotpricebucket','advertiser'##'ip_block'
+                                                    # ,'keypage','size'
+                                                    ])
     pred = pred.join(df.usertag.astype(str).str.strip('[]').str.get_dummies(','))
     pred=pred.drop(['usertag'],axis=1)
     print("After converting categoricals:\t{}".format(pred.shape))
-    
+
 
     # match test set and training set columns
     if enforce_cols is not None:
@@ -50,15 +52,15 @@ def pre_process_data(df, enforce_cols=None):
         print(to_drop)
         pred.drop(to_drop, axis=1, inplace=True)
         pred = pred.assign(**{c: 0 for c in to_add})
-    
+
     pred.fillna(0, inplace=True)
-    
+
     return pred
 
 
 def pre_process_data_test(df, enforce_cols=None):
     print("Input shape:\t{}".format(df.shape))
-    
+
     df.ix[df.slotprice.between(0, 10), 'slotpricebucket'] = 1
     df.ix[df.slotprice.between(11, 50), 'slotpricebucket'] = 2
     df.ix[df.slotprice.between(51, 100), 'slotpricebucket'] = 3
@@ -67,18 +69,18 @@ def pre_process_data_test(df, enforce_cols=None):
 
     pred=df.drop(['bidid','userid','IP','url','urlid','slotid','useragent','slotprice',
                  'domain','slotwidth', 'slotheight'],axis=1)
-    
+
        # create dummy variables for categoricals
     pred = pd.get_dummies(pred,dummy_na=True,columns=['weekday', 'hour',  # ])
-                                                       'OS', 'browser', 
-                                                       'region', 'city', 'adexchange', 
+                                                       'OS', 'browser',
+                                                       'region', 'city', 'adexchange',
                                                        'slotvisibility', 'slotformat',
                                                        'creative', 'slotpricebucket','advertiser'##'ip_block'
                                                     ,'keypage','size'])
     pred = pred.join(df.usertag.astype(str).str.strip('[]').str.get_dummies(','))
     pred = pred.drop(['usertag'],axis=1)
     print("After converting categoricals:\t{}".format(pred.shape))
-    
+
 
     # match test set and training set columns
     if enforce_cols is not None:
@@ -88,7 +90,7 @@ def pre_process_data_test(df, enforce_cols=None):
         print(to_drop)
         pred.drop(to_drop, axis=1, inplace=True)
         pred = pred.assign(**{c: 0 for c in to_add})
-    
+
     pred.fillna(0, inplace=True)
     return pred
 
@@ -101,19 +103,23 @@ y_validation = validation.click
 
 def order(df_test, df_train):
     new_df = pd.DataFrame()
-    
+
     for key in df_train:
         new_df[key] = df_test[key]
     return new_df
 X_validation = order(valid_dum,train_dum)
 X_test = order(test_dum,train_dum)
 
-rus = RandomUnderSampler(random_state=3,ratio={1:1786,0:10716})
-X_train,y_train = rus.fit_sample(train_dum,y)
+# rus = RandomUnderSampler(random_state=3,ratio={1:1786,0:10716})
+# X_train,y_train = rus.fit_sample(train_dum,y)
 
 model_LR = LogisticRegression(penalty = 'l1', max_iter = 100, C = 0.1,
                               solver = 'saga',class_weight = 'unbalanced')
-model_LR.fit(X_train, y_train)
+# X_train = X_train.apply(pd.to_numeric, errors='coerce')
+# y_train = y_train.apply(pd.to_numeric, errors='coerce')
+# X_train.fillna(0, inplace=True)
+# y_train.fillna(0, inplace=True)
+model_LR.fit(train_dum, y)
 
 #X_validation = X_validation.as_matrix()
 y_valid_pre = model_LR.predict_proba(X_validation)
@@ -175,40 +181,7 @@ df.to_csv('pCTRtest_v3.csv', encoding='utf-8', index=False)
 #     if num_click > max_num:
 #         max_num = num_click
 #         max_bid = bid_base
-        
+
 # eval_linear['CTR'] = eval_linear['clicks']/eval_linear['Imps']
 # eval_linear['eCPC'] = eval_linear['spend']/eval_linear['clicks']
 # eval_linear['CPM'] = eval_linear['spend']*1000/eval_linear['Imps']
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,7 +8,10 @@ import datetime
 
 validation_df = pd.read_csv("../we_data/validation.csv")
 train_df = pd.read_csv("../we_data/train.csv")
-size = train_df.shape[0]
+test_df = pd.read_csv("../we_data/test.csv")
+
+size = test_df.shape[0]
+
 print("train_df: {}".format(size))
 print("validation_df: {}".format(validation_df.shape[0]))
 print(validation_df.shape[0]/size)
@@ -79,12 +82,12 @@ def constant_bidding(df):
     # df.to_csv('constant_bidding_clicks_training_set.csv', encoding='utf-8', index=False)
     df.to_csv('constant_bidding_clicks_validation_set.csv', encoding='utf-8', index=False)
 
-    plot_img(list(range(1, maxBid + 1)), click_list)
+    # plot_img(list(range(1, maxBid + 1)), click_list)
 
 def evaluation(constant_price, df):
     clicks = EvalBidClicksOnly(df, constant_price, budget, size)
     print(clicks)
 
-# constant_bidding(train_df)
-constant_bidding(validation_df)
+constant_bidding(train_df)
+# constant_bidding(test_df)
 # evaluation(25, validation_df)
